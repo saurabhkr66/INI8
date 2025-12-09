@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Project Overview
 
-## Getting Started
+This project is a simple full-stack patient portal that allows users to:
 
-First, run the development server:
+Upload PDF medical documents
 
-```bash
+View a list of uploaded documents
+
+Download files in raw/original PDF form
+
+Delete documents
+
+Store metadata (filename, size, created_at) in a SQLite database
+
+Store actual PDF files in a local uploads/ directory
+
+The application uses Next.js App Router for both frontend and backend, and better-sqlite3 for database storage.
+
+🚀 Tech Stack
+Component	Technology
+Frontend	Next.js (React) App Router
+Backend	Next.js Route Handlers
+Database	SQLite (better-sqlite3)
+File Storage	Local filesystem (uploads/)
+🏗️ Folder Structure
+app/
+ ├─ page.tsx                → Frontend UI
+ └─ api/
+     ├─ upload/route.ts     → POST Upload file
+     ├─ files/route.ts      → GET List files
+     └─ files/[id]/route.ts → GET Download + DELETE file
+lib/
+ └─ db.ts                   → SQLite database helper
+uploads/                    → PDF storage
+data.sqlite                 → SQLite file
+README.md
+design.md
+
+🛠️ How to Run the Project Locally
+1. Clone the repository
+git clone <your-repo-url>
+cd patient-portal
+
+2. Install dependencies
+npm install
+
+3. Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open the app
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👉 http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+No database setup required
 
-## Learn More
+SQLite DB is created automatically as:
 
-To learn more about Next.js, take a look at the following resources:
+data.sqlite
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Uploads directory is also created automatically:
 
-## Deploy on Vercel
+uploads/
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+📡 API Reference + Example Calls
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Below are curl commands you can use to test the backend API.
+
+📤 1. Upload a PDF
+POST /documents/upload
+Curl Example
+curl -X POST http://localhost:3000/api/upload \
+  -F "file=@./test.pdf"
+
+Sample Response
+{
+  "id": 1,
+  "filename": "1733738201295-test.pdf",
+  "original_name": "test.pdf",
+  "size": 204800
+}
+
+📄 2. List All Documents
+GET /documents
+Curl Example:
+curl http://localhost:3000/api/files
+
+Sample Response
+[
+  {
+    "id": 1,
+    "filename": "1733738201295-test.pdf",
+    "original_name": "test.pdf",
+    "size": 204800,
+    "created_at": "2025-01-01T12:00:00Z"
+  }
+]
+
+📥 3. Download a Document
+GET /documents/:id
+Curl Example:
+curl -o downloaded.pdf http://localhost:3000/api/files/1
+
+
+This saves the file locally as downloaded.pdf
+
+❌ 4. Delete a Document
+DELETE /documents/:id
+Curl Example:
+curl -X DELETE http://localhost:3000/api/files/1
+
+Sample Response:
+{
+  "success": true
+}
+
+📝 Assumptions
+
+Only PDF files are allowed
+
+No authentication (single-user system)
+
+Upload size expected to be small (e.g., <10MB)
+
+SQLite is suitable for local/small scale use
+
+File storage is local (uploads/ directory)# INI8
