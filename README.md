@@ -38,8 +38,8 @@ design.md
 
 🛠️ How to Run the Project Locally
 1. Clone the repository
-git clone <your-repo-url>
-cd patient-portal
+git clone https://github.com/saurabhkr66/INI8.git
+cd INI8
 
 2. Install dependencies
 npm install
@@ -68,9 +68,7 @@ Below are curl commands you can use to test the backend API.
 
 📤 1. Upload a PDF
 POST /documents/upload
-Curl Example
-curl -X POST http://localhost:3000/api/upload \
-  -F "file=@./test.pdf"
+
 
 Sample Response
 {
@@ -82,8 +80,7 @@ Sample Response
 
 📄 2. List All Documents
 GET /documents
-Curl Example:
-curl http://localhost:3000/api/files
+
 
 Sample Response
 [
@@ -98,16 +95,14 @@ Sample Response
 
 📥 3. Download a Document
 GET /documents/:id
-Curl Example:
-curl -o downloaded.pdf http://localhost:3000/api/files/1
+
 
 
 This saves the file locally as downloaded.pdf
 
 ❌ 4. Delete a Document
 DELETE /documents/:id
-Curl Example:
-curl -X DELETE http://localhost:3000/api/files/1
+
 
 Sample Response:
 {
@@ -124,4 +119,4 @@ Upload size expected to be small (e.g., <10MB)
 
 SQLite is suitable for local/small scale use
 
-File storage is local (uploads/ directory)# INI8
+File storage is local (uploads/ directory)
